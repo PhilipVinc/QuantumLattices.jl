@@ -42,7 +42,7 @@ end
 function LossOp_loc(lattice, ops::Vector)
     Hilb = ops[1].basis_l^nv(lattice)
     jump_ops = Vector{typeof(embed(Hilb, 1, ops[1]))}()
-    for v=vertices(lattice)[2:end]
+    for v=vertices(lattice)[1:end]
         for op=ops
             push!(jump_ops, embed(Hilb, v, op))
         end
