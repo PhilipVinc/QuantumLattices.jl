@@ -2,7 +2,6 @@ function H_NN_lattice(lattice, h_loc, hj_1, hj_2, J)
     Hilb = h_loc.basis_l^nv(lattice)
 
     herm_jumps = ishermitian(hj_1) && ishermitian(hj_2)
-    println("It is $herm_jumps")
 
     H = SparseOperator(Hilb)
     for v=vertices(lattice)
