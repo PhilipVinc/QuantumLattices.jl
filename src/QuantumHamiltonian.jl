@@ -1,4 +1,11 @@
-function H_NN_lattice(lattice, h_loc, hj_1, hj_2, J)
+@doc raw"""
+    H_NN_lattice(lattice, h_loc, hj_1, hj_2, J)
+
+Creates the hamiltonian on `lattice` where h_loc is the local hamiltonian,
+`hj_1`and `hj_2` are respectively the jump operator and it's adjointm, and `J`
+is a complex-valued proportionality term (defaults to 1.0)
+"""
+function H_NN_lattice(lattice, h_loc, hj_1, hj_2, J=1.0)
     Hilb = h_loc.basis_l^nv(lattice)
 
     herm_jumps = ishermitian(hj_1) && ishermitian(hj_2)
@@ -15,11 +22,13 @@ function H_NN_lattice(lattice, h_loc, hj_1, hj_2, J)
                 H += 0.5*J_v*embed(Hilb, nn, hj_2)
             end
         else
-            J_v_dag = conj(J)*embed(Hilb, v, dagger(hj_1))
-            for nn=neighbors(lattice, v)
-                H += 0.5*J_v*embed(Hilb, nn, hj_2)
-                H += 0.5*J_v_dag*embed(Hilb, nn, dagger(hj_2))
-            end
+            #TODO need to consider the directionality in the case of different
+            #jump ops.
+            #J_v_dag = conj(J)*embed(Hilb, v, dagger(hj_1))
+            #for nn=neighbors(lattice, v)
+            #    H += 0.5*J_v*embed(Hilb, nn, hj_2)
+            #    H += 0.5*J_v_dag*embed(Hilb, nn, dagger(hj_2))
+            #end
         end
     end
     return H
@@ -34,11 +43,20 @@ function H_loc_disorder(lattice, h_loc, disorder_val)
     return H
 end
 
+@doc raw"""
+    LossOp_loc(lattice, op::SparseOperator)
 
+Returns a vector with a local-loss operator acting on each lattice site.
+"""
 function LossOp_loc(lattice, op::SparseOperator)
     LossOp_loc(lattice, [op])
 end
 
+@doc raw"""
+    LossOp_loc(lattice, ops::Vector{SparseOperator})
+
+Returns a vector with a local-loss operator acting on each lattice site.
+"""
 function LossOp_loc(lattice, ops::Vector)
     Hilb = ops[1].basis_l^nv(lattice)
     jump_ops = Vector{typeof(embed(Hilb, 1, ops[1]))}()
@@ -50,6 +68,11 @@ function LossOp_loc(lattice, ops::Vector)
     return jump_ops
 end
 
+@doc raw"""
+    LatticeSumOperator(lattice, op::Operator)
+
+Given an operator `op`such as n, returns N=∑ᵢnᵢ for every lattice site.
+"""
 function LatticeSumOperator(lattice, op)
     Hilb = op.basis_l^nv(lattice)
     opTot = embed(Hilb, 1, op)
@@ -59,6 +82,11 @@ function LatticeSumOperator(lattice, op)
     return opTot
 end
 
+@doc raw"""
+    LatticeHomogeneousState(lattice, ψ_loc)
+
+returns ψ_loc ⊗ ψ_loc ⊗ ... ⊗ ψ_loc for every lattice site.
+"""
 function LatticeHomogeneousState(lattice, ψ_loc)
     ψ = ψ_loc
     for v=vertices(lattice)[2:end]
