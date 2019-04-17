@@ -1,19 +1,21 @@
 module QuantumLattices
 
-using QuantumOptics
+using Reexport
+@reexport using QuantumOptics
+import QuantumOptics: basis, SparseOperator, liouvillian
 using LightGraphs
-using LinearAlgebra
+using LinearAlgebra, SparseArrays
 
 # 2)
 # Then define your abstract types:
-abstract type QuantumSystem end
+
 abstract type System end
 abstract type Problem end
 
 include("Lattices.jl")
-include("HamiltonianDefinitions.jl")
 include("QuantumHamiltonian.jl")
 
+include("QODefs.jl")
 export H_NN_lattice, H_loc_disorder, LossOp_loc, LatticeSumOperator, LatticeHomogeneousState
 
 end # module
