@@ -1,3 +1,5 @@
+export SquareLattice
+
 @doc raw"""
     SquareLattice(dims; PBC=false)
 
@@ -15,5 +17,3 @@ creates a lattice with 10 sites along x and 5 sites along y, for a total of
 50 sites.
 """
 SquareLattice(dims; PBC=false) = Grid(dims, periodic=PBC)
-
-export SquareLattice

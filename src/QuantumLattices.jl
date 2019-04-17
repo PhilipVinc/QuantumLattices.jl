@@ -3,6 +3,8 @@ module QuantumLattices
 using Reexport
 @reexport using QuantumOptics
 import QuantumOptics: basis, SparseOperator, liouvillian
+#using QuantumOptics : sigmax, sigmay, sigmaz, SpinBasis, FockBasis, destroy, create, identityoperator
+#using QuantumOptics : conj, ishermitian, SparseOperator, embed
 using LightGraphs
 using LinearAlgebra, SparseArrays
 
@@ -26,6 +28,8 @@ export add_homogeneous_dissipation, add_dissipator
 include("QODefs.jl")
 include("GraphOperator.jl")
 include("GraphSuperOperator.jl")
+include("Utils/Observable.jl")
+
 # Prefedined physical systems
 include("Systems/QuantumIsing.jl")
 include("Systems/BoseHubbard.jl")
