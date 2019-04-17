@@ -26,6 +26,10 @@ export add_homogeneous_dissipation, add_dissipator
 include("QODefs.jl")
 include("GraphOperator.jl")
 include("GraphSuperOperator.jl")
+# Prefedined physical systems
+include("Systems/QuantumIsing.jl")
+include("Systems/BoseHubbard.jl")
+
 export H_NN_lattice, H_loc_disorder, LossOp_loc, LatticeSumOperator, LatticeHomogeneousState
 
 end # module
