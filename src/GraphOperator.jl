@@ -28,10 +28,10 @@ data(go::GraphOperator) = data(SparseOperator(go))
 
 function add_local_operator!(go::GraphOperator, loc_ops, sites=vertices(graph(go)))
     if isa(loc_ops, AbstractOperator)
-        loc_ops = fill(loc_ops, length(vertices(graph(go))))
+        loc_ops = fill(loc_ops, length(sites))
     end
-
-    for (i,op) = zip(1:length(vertices(graph(go))),loc_ops)
+    
+    for (i,op) = zip(sites, loc_ops)
         go.LocalOperators[i] .+= op
     end
 end
@@ -71,6 +71,7 @@ function SparseOperator(go::GraphOperator)
     rows = Vector{Int}()
     cols = Vector{Int}()
     vals = Vector{eltype(first(go.LocalOperators).data)}()
+    n_rows, n_cols = size(op.data)
 
     for site=vertices(graph(go))
         eop = embed(hilb, site, go.LocalOperators[site])
@@ -109,7 +110,7 @@ function SparseOperator(go::GraphOperator)
         end
     end
 
-    op.data = sparse(rows, cols, vals)
+    op.data = sparse(rows, cols, vals, n_rows, n_cols)
 
     op
 end
