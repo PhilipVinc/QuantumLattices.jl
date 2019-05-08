@@ -59,7 +59,11 @@ function add_hop_operator!(go::GraphOperator, hl, hr, coeff::Real)
     # identifying the operator.
     for edge=edges(graph(go))
         edge_op = Tuple{Number, Int, Int}([coeff, l_id, r_id])
-        op = get!(go.EdgeOpList, edge, [edge_op])
+        if edge ∉ keys(go.EdgeOpList)
+            go.EdgeOpList[edge] = [edge_op]
+        else
+            push!(go.EdgeOpList[edge], edge_op)
+        end
     end
 end
 

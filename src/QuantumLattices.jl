@@ -33,6 +33,7 @@ include("Utils/Observable.jl")
 # Prefedined physical systems
 include("Systems/QuantumIsing.jl")
 include("Systems/BoseHubbard.jl")
+include("Systems/XYZ.jl")
 
 export H_NN_lattice, H_loc_disorder, LossOp_loc, LatticeSumOperator, LatticeHomogeneousState
 
