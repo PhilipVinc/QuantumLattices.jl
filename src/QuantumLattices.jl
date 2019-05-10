@@ -5,7 +5,7 @@ using Reexport
 import QuantumOptics: basis, SparseOperator, liouvillian
 #using QuantumOptics : sigmax, sigmay, sigmaz, SpinBasis, FockBasis, destroy, create, identityoperator
 #using QuantumOptics : conj, ishermitian, SparseOperator, embed
-using LightGraphs
+#
 using LinearAlgebra, SparseArrays
 
 # 2)
@@ -13,6 +13,11 @@ using LinearAlgebra, SparseArrays
 
 abstract type System end
 abstract type Problem end
+using LightGraphs
+include("ColoredGraphs/ColoredGraphs.jl")
+using .ColoredGraphs
+export HyperCube
+
 
 include("Lattices.jl")
 include("QuantumHamiltonian.jl")
