@@ -24,5 +24,5 @@ function xyz_ham(gr::Graph, S=1//2; Jx=0.0, Jy=0.0, Jz=0.0)
     end
     go
 end
-xyz_lind(gr::Graph, S=1//2; Jx=0.0, Jy=0.0, Jz=0.0, γ=1.0) = GraphLindbladian(xyz_ham(gr, S, Jx=Jx, Jy=Jy, Jz=Jz),
+xyz_lind(gr::AbstractGraph, S=1//2; Jx=0.0, Jy=0.0, Jz=0.0, γ=1.0) = GraphLindbladian(xyz_ham(gr, S, Jx=Jx, Jy=Jy, Jz=Jz),
                                                                     h_loss_QuantumIsing(S,γ=γ))

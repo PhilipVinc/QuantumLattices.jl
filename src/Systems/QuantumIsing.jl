@@ -19,5 +19,5 @@ h_hop_QuantumIsing(S=1//2; V=0.0) = (sigmaz(SpinBasis(S)),
 
 h_loss_QuantumIsing(S=1//2; γ=1.0) = sqrt(γ)*sigmam(SpinBasis(S))
 
-quantum_ising_ham(gr::Graph, S=1//2; g=0.0, V=0.0) = GraphOperator(gr, SpinBasis(S), h_loc_QuantumIsing(S,g=g), h_hop_QuantumIsing(S,V=V))
-quantum_ising_lind(gr::Graph, S=1//2; g=0.0, V=0.0, γ=1.0) = GraphLindbladian(quantum_ising_ham(gr, S, g=g, V=V), h_loss_QuantumIsing(S,γ=γ))
+quantum_ising_ham(gr::AbstractGraph, S=1//2; g=0.0, V=0.0) = GraphOperator(gr, SpinBasis(S), h_loc_QuantumIsing(S,g=g), h_hop_QuantumIsing(S,V=V))
+quantum_ising_lind(gr::AbstractGraph, S=1//2; g=0.0, V=0.0, γ=1.0) = GraphLindbladian(quantum_ising_ham(gr, S, g=g, V=V), h_loss_QuantumIsing(S,γ=γ))
