@@ -16,7 +16,7 @@ abstract type Problem end
 using LightGraphs
 include("ColoredGraphs/ColoredGraphs.jl")
 using .ColoredGraphs
-export HyperCube
+export HyperCube, translational_symm_table
 
 
 include("Lattices.jl")

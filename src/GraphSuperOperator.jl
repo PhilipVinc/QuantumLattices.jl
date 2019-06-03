@@ -1,3 +1,4 @@
+export jump_operators_graph
 
 mutable struct GraphLindbladian{G,H,GH,LO} <: AbstractGraphSuperOperator
     graph::G
@@ -19,6 +20,7 @@ graph(gl::GraphLindbladian) = gl.graph
 basis(gl::GraphLindbladian) = gl.hilb
 hamiltonian(gl::GraphLindbladian) = gl.H
 jump_operators(gl::GraphLindbladian) = _embed_jump_ops(gl)
+jump_operators_graph(gl::GraphLindbladian) = collect(values(gl.c_ops))
 liouvillian(gl::GraphLindbladian) = liouvillian(SparseOperator(hamiltonian(gl)),
                                         jump_operators(gl))
 
@@ -37,7 +39,9 @@ function add_dissipator(gl::GraphLindbladian, L, v::Int)
     #TODO Fix multiple loss operators per site
     v ∈ keys(gl.c_ops) && throw(ErrorException("loss op on site $v is already present. Currently we do not yet support multiple loss ops per site."))
 
-    push!(gl.c_ops, v=>L)
+    graph_loss = GraphOperator(graph(gl), basis(gl))
+    add_local_operator!(graph_loss, L, v)
+    push!(gl.c_ops, v=>graph_loss)
     return gl
 end
 
@@ -47,7 +51,8 @@ function _embed_jump_ops(gl)
 
     for v=keys(c_ops)
         op = c_ops[v]
-        push!(embedded_ops, embed(basis(gl), v, op))
+        #push!(embedded_ops, embed(basis(gl), v, op))
+        push!(embedded_ops, SparseOperator(op))
     end
     return embedded_ops
 end
@@ -59,3 +64,11 @@ QuantumOptics.steadystate.master(lind::GraphLindbladian, args...) =
 QuantumOptics.steadystate.eigenvector(lind::GraphLindbladian, args...) =
     steadystate.eigenvector(SparseOperator(hamiltonian(lind)),
                                             jump_operators(lind), args...)
+
+
+
+# pretty printing
+Base.show(io::IO, g::GraphLindbladian) = print(io,
+    "Lindbladian SuperOperator on graph: \n"*
+    "\tgraph         : $(g.graph)\n"*
+    "\thilbert space : $(g.hilb)")

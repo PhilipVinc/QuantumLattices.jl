@@ -21,7 +21,6 @@ function LocalObservable(lind::Union{GraphLindbladian, GraphOperator},
 
     if isa(op, Function) && isa(sites, Int)
         op = op(Hilb.bases[sites])
-    elseif isa(op, Function)
     end
 
     if isa(sites, Int)

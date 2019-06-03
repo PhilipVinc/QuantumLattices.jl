@@ -14,7 +14,7 @@ import LightGraphs:
 
 export ColoredGraph, ColoredDiGraph, ColoredEdge
 
-export HyperCube
+export HyperCube, translational_symm_table
 
 abstract type AbstractColoredEdge{T} <: AbstractEdge{T} end
 abstract type AbstractColoredGraph{T} <: AbstractGraph{T} end

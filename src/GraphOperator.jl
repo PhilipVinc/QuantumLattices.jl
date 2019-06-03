@@ -30,7 +30,7 @@ function add_local_operator!(go::GraphOperator, loc_ops, sites=vertices(graph(go
     if isa(loc_ops, AbstractOperator)
         loc_ops = fill(loc_ops, length(sites))
     end
-    
+
     for (i,op) = zip(sites, loc_ops)
         go.LocalOperators[i] .+= op
     end
@@ -118,3 +118,5 @@ function SparseOperator(go::GraphOperator)
 
     op
 end
+
+# pretty printing
