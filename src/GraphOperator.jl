@@ -67,6 +67,8 @@ function add_hop_operator!(go::GraphOperator, hl, hr, coeff::Real)
     end
 end
 
+DenseOperator(go::GraphOperator) = dense(SparseOperator(go))
+
 function SparseOperator(go::GraphOperator)
     hilb = go.hilb
     op = SparseOperator(hilb)
