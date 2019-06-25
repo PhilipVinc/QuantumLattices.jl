@@ -3,6 +3,7 @@ module QuantumLattices
 using Reexport
 @reexport using QuantumOptics
 import QuantumOptics: basis, SparseOperator, liouvillian
+import QuantumOptics: DenseOperator, dense
 #using QuantumOptics : sigmax, sigmay, sigmaz, SpinBasis, FockBasis, destroy, create, identityoperator
 #using QuantumOptics : conj, ishermitian, SparseOperator, embed
 #
@@ -26,7 +27,7 @@ abstract type AbstractGraphOperator end
 abstract type AbstractGraphSuperOperator end
 
 export graph, basis, data, is_homogeneous
-export add_local_operator!, add_hop_operator!, SparseOperator, DenseOperator
+export add_local_operator!, add_hop_operator!
 export GraphOperator, GraphLindbladian, hamiltonian, jump_operators, liouvillian
 export add_homogeneous_dissipation, add_dissipator
 
