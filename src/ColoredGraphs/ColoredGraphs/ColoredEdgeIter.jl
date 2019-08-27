@@ -1,4 +1,4 @@
-using LightGraphs.SimpleGraphs: SimpleEdgeIter, SimpleEdgeIterState, edge_start, edge_next
+using LightGraphs.SimpleGraphs: SimpleEdgeIter#, edge_start, edge_next
 
 """
     ColoredEdgeIter
@@ -30,14 +30,12 @@ end
 eltype(::Type{SimpleEdgeIter{CGT}}) where {CGT<:AbstractColoredGraph} = ColoredEdge{T}
 #eltype(::Type{ColoredEdgeIterState{ColoredDiGraph{T}}}) where {T} = ColoredDiGraphEdge{T}
 
-function iterate(eit::ColoredEdgeIter{G}) where {G<:AbstractColoredGraph}
-    state = edge_start(uncolored(eit.g))
-    return iterate(eit, state)
-end
+function iterate(eit::ColoredEdgeIter{G}, state=(one(eltype(eit.g)), 1)) where {T,G<:AbstractColoredGraph{T}}
+    # isnothing(state) && return nothing
+    iter_res = iterate(edges(uncolored(eit.g)), state)
+    isnothing(iter_res) && return nothing
 
-function iterate(eit::ColoredEdgeIter{G}, state::SimpleEdgeIterState{T}) where {T,G<:AbstractColoredGraph{T}}
-    state.s == zero(T) && return nothing
-    edge, state = edge_next(uncolored(eit.g), state)
+    edge, state = iter_res
     return colored(eit.g, edge), state
 end
 
