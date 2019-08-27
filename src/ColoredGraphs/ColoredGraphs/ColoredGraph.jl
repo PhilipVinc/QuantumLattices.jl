@@ -43,8 +43,9 @@ LightGraphs.has_vertex(g::AbstractColoredGraph, v::Integer) = v in vertices(g)
 LightGraphs.inneighbors(g::AbstractColoredGraph, v::Integer) = inneighbors(uncolored(g),v)
 LightGraphs.outneighbors(g::AbstractColoredGraph, v::Integer) = outneighbors(uncolored(g),v)
 
-## specific implementations
-LightGraphs.is_directed(g::ColoredGraph) = is_directed(uncolored(g))
+# specific implementations
+#LightGraphs.is_directed(g::ColoredGraph) = is_directed(uncolored(g))
+LightGraphs.is_directed(::Type{<:ColoredGraph{SGT,T}}) where {SGT, T}= is_directed(SGT)
 LightGraphs.has_edge(g::ColoredGraph, s, d) = has_edge(uncolored(g), s, d)
 
 function LightGraphs.has_edge(g::ColoredGraph, s, d, c)

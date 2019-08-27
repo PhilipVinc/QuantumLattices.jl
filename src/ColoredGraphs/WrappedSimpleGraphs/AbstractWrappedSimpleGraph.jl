@@ -23,6 +23,8 @@ badj(g::AbstractWrappedSimpleGraph, v::Integer) = badj(bare(g), v)
 
 ne(g::AbstractWrappedSimpleGraph) = ne(bare(g))
 edgetype(g::AbstractWrappedSimpleGraph) = edgetype(bare(g))
-is_directed(g::AbstractWrappedSimpleGraph) = is_directed(bare(g))
+#is_directed(g::AbstractWrappedSimpleGraph) = is_directed(bare(g))
+# TODO Fix this ugly hack
+is_directed(g::Type{<:AbstractWrappedSimpleGraph}) = is_directed(fieldtype(g, :bare_graph))
 has_edge(g::AbstractWrappedSimpleGraph, args...) = has_edge(bare(g), args...)
 eltype(g::AbstractWrappedSimpleGraph) = eltype(bare(g))
