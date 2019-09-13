@@ -7,6 +7,15 @@ mutable struct HyperCube{T,SG<:AbstractSimpleGraph{T}} <: AbstractWrappedSimpleG
     vert_coords::Vector{Vector{T}}
 end
 
+"""
+    HyperCube([dims::Int], periodic=true) -> HyperCube
+
+Creates a HyperCube graph with spatial dimensions specified by dims. If `periodic==true`
+then every dimension is periodic.
+
+The returned graph holds the lattice coordinates of every vertex in the underlying
+graph, useful when computing correlation functions.
+"""
 function HyperCube(dims, periodic=true)
     T=Int
 

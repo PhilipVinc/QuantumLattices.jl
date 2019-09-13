@@ -15,7 +15,7 @@ function h_loc_BoseHubbard(n_max;U=0.0, F=0.0, Δ=0.0)
     a_loc  = destroy(Hilb_loc)
     ad_loc = create(Hilb_loc)
     n_loc  = ad_loc*a_loc
-    return - Δ*n_loc + U*n_loc*(n_loc-identityoperator(Hilb_loc)) + conj(F)*a_loc + F*ad_loc
+    return - Δ*n_loc + U/2*n_loc*(n_loc-identityoperator(Hilb_loc)) + conj(F)*a_loc + F*ad_loc
 end
 
 function h_loc_tlspumped(;F=0.0, Δ=0.0)

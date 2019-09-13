@@ -16,7 +16,18 @@ export ColoredGraph, ColoredDiGraph, ColoredEdge
 
 export HyperCube, translational_symm_table
 
+"""
+    AbstractColoredEdge{T} <: AbstractEdge{T}
+
+Abstract base type for an edge with a color.
+"""
 abstract type AbstractColoredEdge{T} <: AbstractEdge{T} end
+
+"""
+    AbstractColoredGraph{T} <: AbstractGraph{T}
+
+Abstract base type for colored graphs.
+"""
 abstract type AbstractColoredGraph{T} <: AbstractGraph{T} end
 
 include("ColoredGraphs/ColoredEdge.jl")

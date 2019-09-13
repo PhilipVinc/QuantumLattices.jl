@@ -4,7 +4,14 @@ import Base: Pair, Tuple, show, ==
 import LightGraphs: AbstractEdge, src, dst, reverse
 import LightGraphs.SimpleGraphs: SimpleEdge
 
+"""
+    ColoredEdge{T<:Integer} <: AbstractColoredEdge
 
+A simple implementation of a colored edge, with a `src` a `dst` and a color
+`col` of the edge.
+Those properties should be accessed with the methods that work on all
+`AbstractColoredEdge` `src`, `dst`, `color`.
+"""
 struct ColoredEdge{T<:Integer} <: AbstractColoredEdge{T}
     src::T
     dst::T
