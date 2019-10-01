@@ -57,14 +57,6 @@ function _embed_jump_ops(gl)
     return embedded_ops
 end
 
-## Integrators
-QuantumOptics.steadystate.master(lind::GraphLindbladian, args...) =
-    steadystate.master(SparseOperator(hamiltonian(lind)), jump_operators(lind), args...)
-
-QuantumOptics.steadystate.eigenvector(lind::GraphLindbladian, args...) =
-    steadystate.eigenvector(SparseOperator(hamiltonian(lind)),
-                                            jump_operators(lind), args...)
-
 
 
 # pretty printing
