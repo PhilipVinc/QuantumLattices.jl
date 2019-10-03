@@ -11,7 +11,8 @@ end
     HyperCube([dims::Int], periodic=true) -> HyperCube
 
 Creates a HyperCube graph with spatial dimensions specified by dims. If `periodic==true`
-then every dimension is periodic.
+then every dimension is periodic. You can also pass `periodic=[true, false, false]`
+and only the specified dimensions will be periodic
 
 The returned graph holds the lattice coordinates of every vertex in the underlying
 graph, useful when computing correlation functions.

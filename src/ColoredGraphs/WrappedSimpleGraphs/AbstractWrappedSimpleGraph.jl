@@ -1,5 +1,6 @@
 using LightGraphs.SimpleGraphs: SimpleEdge, AbstractSimpleGraph
-import LightGraphs.SimpleGraphs: fadj, ne, badj
+using LightGraphs.SimpleGraphs: SimpleGraphs, fadj, ne, badj, add_edge!, rem_edge!
+using LightGraphs: ne, edgetype, has_edge, is_directed
 
 """
     AbstractWrappedSimpleGraph{T} <: AbstractSimpleGraph{T}
@@ -16,15 +17,21 @@ abstract type AbstractWrappedSimpleGraph{T} <: AbstractSimpleGraph{T} end
 ## imple
 bare(g::AbstractWrappedSimpleGraph) = g.bare_graph
 
-fadj(g::AbstractWrappedSimpleGraph) = fadj(bare(g))
-fadj(g::AbstractWrappedSimpleGraph, v::Integer) = fadj(bare(g), v)
-badj(g::AbstractWrappedSimpleGraph) = badj(bare(g))
-badj(g::AbstractWrappedSimpleGraph, v::Integer) = badj(bare(g), v)
+SimpleGraphs.fadj(g::AbstractWrappedSimpleGraph) = fadj(bare(g))
+SimpleGraphs.fadj(g::AbstractWrappedSimpleGraph, v::Integer) = fadj(bare(g), v)
+SimpleGraphs.badj(g::AbstractWrappedSimpleGraph) = badj(bare(g))
+SimpleGraphs.badj(g::AbstractWrappedSimpleGraph, v::Integer) = badj(bare(g), v)
 
-ne(g::AbstractWrappedSimpleGraph) = ne(bare(g))
-edgetype(g::AbstractWrappedSimpleGraph) = edgetype(bare(g))
+LightGraphs.ne(g::AbstractWrappedSimpleGraph) = ne(bare(g))
+LightGraphs.edgetype(g::AbstractWrappedSimpleGraph) = edgetype(bare(g))
 #is_directed(g::AbstractWrappedSimpleGraph) = is_directed(bare(g))
 # TODO Fix this ugly hack
-is_directed(g::Type{<:AbstractWrappedSimpleGraph}) = is_directed(fieldtype(g, :bare_graph))
-has_edge(g::AbstractWrappedSimpleGraph, args...) = has_edge(bare(g), args...)
-eltype(g::AbstractWrappedSimpleGraph) = eltype(bare(g))
+LightGraphs.is_directed(g::Type{<:AbstractWrappedSimpleGraph}) = is_directed(fieldtype(g, :bare_graph))
+LightGraphs.has_edge(g::AbstractWrappedSimpleGraph, args...) = has_edge(bare(g), args...)
+Base.eltype(g::AbstractWrappedSimpleGraph)   = eltype(bare(g))
+
+SimpleGraphs.add_edge!(g::AbstractWrappedSimpleGraph, e::AbstractEdge) =
+    add_edge!(bare(g), e)
+
+SimpleGraphs.rem_edge!(g::AbstractWrappedSimpleGraph, e::AbstractEdge) =
+    rem_edge!(bare(g), e)
