@@ -1,43 +1,66 @@
 using LightGraphs.SimpleGraphs: SimpleEdge, AbstractSimpleGraph
 using LightGraphs.SimpleGraphs: SimpleGraphs
 
+export color, colors
+
 mutable struct ColoredGraph{SGT<:AbstractSimpleGraph,T} <: AbstractColoredGraph{T}
     uncolored_graph::SGT
-    colmap::Dict{SimpleEdge{T}, T}
+    colmap::Dict{SimpleEdge{T}, Vector{T}}
 end
 
 function ColoredGraph(g::AbstractSimpleGraph)
     T=eltype(g)
-    cmap = Dict{SimpleEdge{T}, T}()
+    cmap = Dict{SimpleEdge{T}, Vector{T}}()
     for e=edges(g)
-        cmap[e] = 1
+        cmap[e] = [1]
+        if !is_directed(g)
+            cmap[reverse(e)] = [1]
+        end
     end
     return ColoredGraph(g, cmap)
 end
 
-ColoredGraph(n::T=0) where T = ColoredGraph(SimpleGraph(n), Dict{SimpleEdge{T}, T}())
-ColoredDiGraph(n::T=0) where T = ColoredGraph(SimpleDiGraph(n), Dict{SimpleEdge{T}, T}())
+ColoredGraph(n::T=0) where T = ColoredGraph(SimpleGraph(n), Dict{SimpleEdge{T}, Vector{T}}())
+ColoredDiGraph(n::T=0) where T = ColoredGraph(SimpleDiGraph(n), Dict{SimpleEdge{T}, Vector{T}}())
 
 Base.eltype(x::ColoredGraph{SGT,T}) where {SGT,T} = T
 LightGraphs.edgetype(x::ColoredGraph{SGT,T}) where {SGT,T}  = ColoredEdge{T}
 
 LightGraphs.nv(g::AbstractColoredGraph) = nv(g.uncolored_graph)
-LightGraphs.ne(g::AbstractColoredGraph) = ne(g.uncolored_graph)
+LightGraphs.ne(g::AbstractColoredGraph) = begin
+    tot = sum(sum.(values(colmap(g))))
+    is_directed(g) && return tot
+    return Int(tot/2)
+end
 LightGraphs.vertices(g::AbstractColoredGraph) = vertices(g.uncolored_graph)
 LightGraphs.edges(g::AbstractColoredGraph) = ColoredEdgeIter(g)
 
 colmap(g::AbstractColoredGraph) = g.colmap
 uncolored(g::AbstractColoredGraph) = g.uncolored_graph
 
-set_color!(g::AbstractColoredGraph, src, dst, col) = begin
-    colmap(g)[SimpleEdge(src,dst)] = col
-    !is_directed(g) ? colmap(g)[SimpleEdge(dst, src)] = col : nothing;
+set_colors!(g::AbstractColoredGraph, src, dst, cols::AbstractVector) = begin
+    colmap(g)[SimpleEdge(src,dst)] = cols
+    !is_directed(g) ? colmap(g)[SimpleEdge(dst, src)] = cols : nothing;
     return nothing
 end
-color(g::AbstractColoredGraph, src, dst) = color(g, SimpleEdge(src,dst))
-color(g::AbstractColoredGraph, e) = colmap(g)[e]
-colored(g::AbstractColoredGraph, e::SimpleEdge) = ColoredEdge(e, color(g, e))
-colored(g::AbstractColoredGraph, src, dst) = ColoredEdge(src, dst, color(g, src, dst))
+
+add_color!(g::AbstractColoredGraph, src, dst, col) = begin
+    edge_cols = get(colmap(g), SimpleEdge(src,dst), Int[])
+    col ∈ edge_cols && return false
+    push!(edge_cols, col)
+
+    # If is not directed add the reverse connection
+    if !is_directed(g)
+        edge_cols = get(colmap(g), SimpleEdge(dst,src), Int[])
+        push!(edge_cols, col)
+    end
+    return true
+end
+
+colors(g::AbstractColoredGraph, src, dst) = colors(g, SimpleEdge(src,dst))
+colors(g::AbstractColoredGraph, e) = colmap(g)[e]
+#colored(g::AbstractColoredGraph, e::SimpleEdge) = ColoredEdge(e, colors(g, e))
+#colored(g::AbstractColoredGraph, src, dst)      = ColoredEdge(src, dst, colors(g, src, dst))
 
 LightGraphs.has_vertex(g::AbstractColoredGraph, v::Integer) = v in vertices(g)
 
@@ -52,17 +75,16 @@ LightGraphs.has_edge(g::ColoredGraph, s, d) = has_edge(uncolored(g), s, d)
 
 function LightGraphs.has_edge(g::ColoredGraph, s, d, c)
     has_edge(uncolored(g), s, d) || return false
-    return color(g, s, d) == c
+    return c ∈ colors(g, s, d)
 end
-LightGraphs.has_edge(g::ColoredGraph, e::ColoredEdge) = has_edge(g, src(e), dst(e), col(e))
+LightGraphs.has_edge(g::ColoredGraph, e::ColoredEdge) = has_edge(g, src(e), dst(e), color(e))
 
 # modifications
 SimpleGraphs.add_edge!(g::AbstractColoredGraph, e::AbstractColoredEdge) =
     add_edge!(g, src(e), dst(e), color(e))
 SimpleGraphs.add_edge!(g::AbstractColoredGraph, src, dst, col) = begin
-    !add_edge!(uncolored(g), src, dst) && return false
-    set_color!(g, src, dst, col)
-    return true
+    add_edge!(uncolored(g), src, dst)
+    return add_color!(g, src, dst, col)
 end
 
 SimpleGraphs.rem_edge!(g::AbstractColoredGraph, e) = rem_edge!(g, src(e), dst(e))

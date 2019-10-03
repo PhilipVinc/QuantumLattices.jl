@@ -18,7 +18,6 @@ struct ColoredEdge{T<:Integer} <: AbstractColoredEdge{T}
     col::T
 end
 ColoredEdge{T}(src,dst,col) where T = ColoredEdge{T}(src,dst,col)
-ColoredEdge(src,dst,col) = ColoredEdge(src,dst,col)
 ColoredEdge(t::Tuple)    = ColoredEdge(t[1], t[2], t[3])
 ColoredEdge(p::Tuple{Pair,Integer}) = ColoredEdge(p[1].first, p[1].second, p[2])
 ColoredEdge(p::Tuple{SimpleEdge,Integer}) = ColoredEdge(src(p[1]), dst(p[1]), p[2])
