@@ -17,6 +17,7 @@ creates a lattice with 10 sites along x and 5 sites along y, for a total of
 50 sites.
 """
 SquareLattice(dims; PBC=false) = HyperCube(dims, PBC)
+SquareLattice(dim::Int; kwargs...) = SquareLattice([dim];kwargs...)
 
 """
     all_isomorph(graph)

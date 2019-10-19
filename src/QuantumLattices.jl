@@ -47,10 +47,10 @@ function __init__()
     @require QuantumOptics="6e0679c1-51ea-5a7c-ac74-d61b76210b0c" begin
         ## Integrators
         QuantumOptics.steadystate.master(lind::GraphLindbladian, args...) =
-            steadystate.master(SparseOperator(hamiltonian(lind)), jump_operators(lind), args...)
+            QuantumOptics.steadystate.master(SparseOperator(hamiltonian(lind)), jump_operators(lind), args...)
 
         QuantumOptics.steadystate.eigenvector(lind::GraphLindbladian, args...) =
-            steadystate.eigenvector(SparseOperator(hamiltonian(lind)),
+            QuantumOptics.steadystate.eigenvector(SparseOperator(hamiltonian(lind)),
                                                     jump_operators(lind), args...)
     end
 
