@@ -30,6 +30,8 @@ function HyperCube(dims, periodic=true)
         periodic = fill(periodic, size(dims))
     end
 
+    sg = SimpleGraph{T}(nv)
+
     fadjlist = Vector{Vector{T}}()
     for i=1:nv
         neighbors = Vector{T}()
@@ -43,19 +45,19 @@ function HyperCube(dims, periodic=true)
                         coord = copy(coord_o)
                         coord[j] = nj
                         push!(neighbors, findfirst(x->x==coord, vert_coords))
+                        add_edge!(sg, i, findfirst(x->x==coord, vert_coords))
                     end
                 else
                     coord = copy(coord_o)
                     coord[j] = nj
                     push!(neighbors, findfirst(x->x==coord, vert_coords))
+                    add_edge!(sg, i, findfirst(x->x==coord, vert_coords))
                 end
             end
         end
         push!(fadjlist, neighbors)
     end
     ne = convert(T,sum(length.(fadjlist))//2)
-
-    sg = SimpleGraph{T}(ne, fadjlist)
 
     return HyperCube(sg, dims, vert_coords)
 end
